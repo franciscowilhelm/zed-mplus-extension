@@ -17,7 +17,7 @@
     "license": "MIT",
     "description": "Tree-sitter grammar for Mplus input (.inp) files",
     "links": {
-      "repository": "https://github.com/YOUR-USER/zed-mplus-extension"
+      "repository": "https://github.com/franciscowilhelm/zed-mplus-extension"
     }
   }
 }

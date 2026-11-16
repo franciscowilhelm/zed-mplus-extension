@@ -1,6 +1,9 @@
-; Put a ▶ run button in the gutter next to the first command of the file.
-; It runs the tasks tagged `mplus-run` (see tasks.json).
+; Put a ▶ run button in the gutter next to the first command of the file
+; (comments before it are skipped). It runs the tasks tagged `mplus-run`
+; (see tasks.json).
 (source_file
+  .
+  (comment)*
   .
   [
     (title_section header: (_) @run)

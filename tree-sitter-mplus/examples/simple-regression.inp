@@ -1,0 +1,7 @@
+TITLE:  Simple linear regression of an outcome
+        on two covariates
+DATA:   FILE IS regression.dat;
+VARIABLE:   NAMES ARE y x1 x2;
+ANALYSIS:   ESTIMATOR = ML;
+MODEL:  y ON x1 x2;
+OUTPUT: STANDARDIZED;

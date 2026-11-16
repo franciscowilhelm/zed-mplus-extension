@@ -2,74 +2,58 @@
 
 [Mplus](https://www.statmodel.com/) support for the [Zed](https://zed.dev) editor:
 
-- **Syntax highlighting** for `.inp` files, via a tree-sitter grammar (`tree-sitter-mplus/`)
+- **Syntax highlighting** for `.inp` files.
+- **Tasks** to run Mplus on the current file, with a ▶ button for easy access.
+- **Outline panel / breadcrumbs**: one entry per command plus mixture class labels
+- **Bracket matching**, `!` comment toggling (`cmd-/`)
+
+No language server is used, only tree-sitter (`tree-sitter-mplus/`)
   - command headers (`TITLE:`, `DATA:`, `VARIABLE:`, `MODEL:`, `MODEL CONSTRAINT:`, …, incl. 4-letter abbreviations)
   - free-text titles, `!` line comments and `!* … *!` block comments
   - option names (`NAMES ARE`, `ESTIMATOR =`) and built-in settings (`MLR`, `BAYES`, `MIXTURE`, …)
   - model keywords (`BY`, `ON`, `WITH`, `PON`, `PWITH`, `XWITH`, `IND`, `VIA`, `|`), `@` / `*` / `$` / `#`
   - class labels (`%OVERALL%`, `%c#1%`), parameter labels (`(b1)`), DEFINE/CONSTRAINT functions
-- **Outline panel / breadcrumbs**: one entry per command plus mixture class labels
-- **Bracket matching**, `!` comment toggling (`cmd-/`)
-- **Tasks** to run Mplus on the current file, with a ▶ button in the gutter
-
-No language server is used, only tree-sitter.
 
 Keyword lists are adapted from the VS Code
 [language-mplus](https://marketplace.visualstudio.com/items?itemName=pacbard.language-mplus) extension;
 the run task follows the idea of the SSCC
 [Mplus and VS Code](https://sscc.wisc.edu/sscc/pubs/MPlus/Slurm/MPlus-and-VSCode.html) guide.
 
-## Layout
+## Install
 
-```
-extension.toml            Zed extension manifest (points at the grammar)
-languages/mplus/
-  config.toml             file suffixes, comments, brackets
-  highlights.scm          syntax highlighting
-  outline.scm             outline panel
-  brackets.scm            bracket matching
-  runnables.scm           ▶ gutter button on the first command
-  tasks.json              "Mplus: run …" tasks
-tree-sitter-mplus/
-  grammar.js              the grammar
-  src/scanner.c           external scanner for TITLE text
-  src/parser.c            generated, must be committed (Zed compiles it)
-  examples/*.inp          sample inputs used to check the parser
-```
+Until the extension is in Zed's extension registry, install it as a dev extension:
 
-## Install as a dev extension
+1. Clone this repository:
 
-Zed builds the grammar from a **git commit** that contains the generated
-`src/parser.c`, so the grammar has to be generated and committed first.
+   ```bash
+   git clone https://github.com/franciscowilhelm/zed-mplus-extension.git
+   ```
 
-1. Generate the parser (needs Node; a C compiler is used by `parse`):
+2. In Zed: command palette → **zed: install dev extension** → pick the cloned folder.
+   Zed downloads the grammar from this repository and compiles it.
+
+3. Open any `.inp` file; the language selector in the status bar should say **Mplus**.
+
+## Developing the grammar
+
+The grammar is in `tree-sitter-mplus/grammar.js` (plus `src/scanner.c` for `TITLE:` text).
+Zed compiles the committed `src/parser.c`, so after changing the grammar:
+
+1. Regenerate and check the examples parse without errors:
 
    ```bash
    cd tree-sitter-mplus && npm install && npx tree-sitter generate && npx tree-sitter parse examples/*.inp --quiet --stat
    ```
 
-   `parse --quiet` prints only files with syntax errors; all examples should parse at 100%.
+2. Commit (including `tree-sitter-mplus/src/`) and push.
 
-2. Commit everything, including `tree-sitter-mplus/src/`:
+3. Set `rev` in `extension.toml` to the full SHA of that commit, then run
+   **zed: rebuild dev extension**. To test before pushing, temporarily set
+   `repository = "file:///absolute/path/to/zed-mplus-extension"`.
 
-   ```bash
-   git init -b main && git add -A && git commit -m "Mplus extension for Zed"
-   ```
+Changes to `languages/mplus/*` (queries, tasks, config) only need
+**zed: rebuild dev extension**, no commit.
 
-3. `extension.toml` points at this folder (`file://…`) and `rev = "main"`. Adjust the
-   absolute path if you move the folder.
-
-4. In Zed: command palette → **zed: install dev extension** → pick this folder.
-   Open any `.inp` file; the language selector in the status bar should say **Mplus**.
-
-After changing `grammar.js`, regenerate, **commit**, and run **zed: rebuild dev extension**
-(Zed checks out the committed revision, not your working tree).
-
-### Publishing
-
-Push to GitHub, then in `extension.toml` set `repository` to the GitHub URL and `rev`
-to the full commit SHA, and follow Zed's
-[publishing guide](https://zed.dev/docs/extensions/developing-extensions#publishing-your-extension).
 
 ## Running Mplus
 
@@ -130,3 +114,28 @@ Example for a Slurm cluster (as in the SSCC guide), in `.zed/tasks.json`:
   the `TITLE:` text, the same way Mplus reads it. Text on the `TITLE:` line itself is
   always title.
 - `.out` files aren't highlighted (no grammar for them yet).
+
+
+## Layout
+
+```
+extension.toml            Zed extension manifest (points at the grammar)
+languages/mplus/
+  config.toml             file suffixes, comments, brackets
+  highlights.scm          syntax highlighting
+  outline.scm             outline panel
+  brackets.scm            bracket matching
+  runnables.scm           ▶ gutter button on the first command
+  tasks.json              "Mplus: run …" tasks
+tree-sitter-mplus/
+  grammar.js              the grammar
+  src/scanner.c           external scanner for TITLE text
+  src/parser.c            generated, must be committed (Zed compiles it)
+  examples/*.inp          sample inputs used to check the parser
+```
+
+## Publishing (internal note)
+
+Push to GitHub, then in `extension.toml` set `repository` to the GitHub URL and `rev`
+to the full commit SHA, and follow Zed's
+[publishing guide](https://zed.dev/docs/extensions/developing-extensions#publishing-your-extension).
