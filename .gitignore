@@ -1,0 +1,16 @@
+# Zed clones and compiles the grammar here when installing the dev extension
+/grammars/
+*.wasm
+extension.wasm
+
+# tree-sitter
+tree-sitter-mplus/node_modules/
+tree-sitter-mplus/build/
+tree-sitter-mplus/*.dylib
+tree-sitter-mplus/*.so
+tree-sitter-mplus/*.dll
+
+# Mplus run artifacts from the examples
+*.out
+*.gh5
+.DS_Store

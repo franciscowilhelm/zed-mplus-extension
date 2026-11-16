@@ -1,0 +1,30 @@
+[
+  {
+    "label": "Mplus: run current file",
+    "command": "mplus",
+    "args": ["$ZED_FILENAME"],
+    "cwd": "$ZED_DIRNAME",
+    "save": "current",
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false,
+    "reveal": "always",
+    "tags": ["mplus-run"]
+  },
+  {
+    "label": "Mplus: run current file and open output",
+    "command": "mplus \"$ZED_FILENAME\" && zed \"$ZED_STEM.out\"",
+    "cwd": "$ZED_DIRNAME",
+    "save": "current",
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false,
+    "reveal": "always",
+    "tags": ["mplus-run"]
+  },
+  {
+    "label": "Mplus: open output of current file",
+    "command": "zed",
+    "args": ["$ZED_DIRNAME/$ZED_STEM.out"],
+    "reveal": "never",
+    "hide": "on_success"
+  }
+]

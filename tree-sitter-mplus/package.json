@@ -1,0 +1,25 @@
+{
+  "name": "tree-sitter-mplus",
+  "version": "0.1.0",
+  "description": "Tree-sitter grammar for Mplus input (.inp) files",
+  "license": "MIT",
+  "private": true,
+  "keywords": [
+    "tree-sitter",
+    "mplus",
+    "sem",
+    "parser"
+  ],
+  "devDependencies": {
+    "tree-sitter-cli": "^0.25.0"
+  },
+  "scripts": {
+    "generate": "tree-sitter generate",
+    "parse": "tree-sitter parse examples/*.inp --quiet --stat",
+    "highlight": "tree-sitter highlight examples/*.inp",
+    "test": "tree-sitter generate && tree-sitter parse examples/*.inp --quiet --stat"
+  },
+  "allowScripts": {
+    "tree-sitter-cli@0.25.10": true
+  }
+}
