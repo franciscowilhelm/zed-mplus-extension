@@ -57,6 +57,23 @@ your Zed settings; Mplus output is then still recognised by its first line
 "file_types": { "Plain Text": ["out"] }
 ```
 
+### Colours of warnings and errors
+
+Zed themes have no colours for messages, so in output files warnings use the theme's
+function colour and errors its keyword colour. To give them colours of their own, add
+this to your Zed settings (use the name of your theme):
+
+```json
+"theme_overrides": {
+  "Ayu Light": {
+    "syntax": {
+      "function.warning": { "color": "#b8860b" },
+      "keyword.error": { "color": "#d32f2f", "font_weight": 700 }
+    }
+  }
+}
+```
+
 ## Developing the grammar
 
 There are two grammars: `tree-sitter-mplus/` for input files (`grammar.js`, plus

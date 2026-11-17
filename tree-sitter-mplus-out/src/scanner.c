@@ -199,7 +199,9 @@ static bool reports_problem(const char *text) {
   static const char *const WORDS[] = {
     "WARNING",        "NO CONVERGENCE",        "NONCONVERGENCE", "NOT TERMINATE",
     "COULD NOT",      "NOT POSITIVE DEFINITE", "NON-POSITIVE",   "PROBLEM",
-    "NOT IDENTIFIED", "NONIDENTIFIED",         "UNTRUSTWORTHY",
+    "NOT IDENTIFIED", "NONIDENTIFIED",         "UNTRUSTWORTHY",  "NOT BE TRUSTWORTHY",
+    "NOT CONVERGE",   "NONIDENTIFICATION",     "POORLY",         "SIZE FOR THE POSTERIOR",
+    "NOT REPLICATED", "SINGULAR",
   };
   for (unsigned i = 0; i < sizeof(WORDS) / sizeof(WORDS[0]); i++) {
     if (contains(text, WORDS[i])) return true;
@@ -293,7 +295,7 @@ bool tree_sitter_mplus_out_external_scanner_scan(void *payload, TSLexer *lexer,
   // Results tables:  ` F1       BY`, ` Means`, ` Residual Variances`
   if (indent == 1 && is_alpha(first) && line.numeric_words == 0 && !line.has_sentence &&
       !line.has_colon && line.words <= 4 &&
-      (line.has_lower || is_model_keyword(line.last_word))) {
+      ((line.has_lower && !line.has_gap) || is_model_keyword(line.last_word))) {
     lexer->result_symbol = PARAMETER_HEADER;
     return valid_symbols[PARAMETER_HEADER];
   }
@@ -316,7 +318,11 @@ bool tree_sitter_mplus_out_external_scanner_scan(void *payload, TSLexer *lexer,
   bool is_input = indent == 0 && equals(line.text, "INPUT INSTRUCTIONS");
   bool is_banner = indent == 0 && equals(line.text, "MUTHEN & MUTHEN");
   bool is_fit_index = indent == 0 && equals(line.text, "CFI/TLI");
-  bool sentence = line.has_sentence || contains(line.text, "TERMINATED");
+  // A status line, as opposed to a heading.
+  bool sentence = line.has_sentence || contains(line.text, "TERMINATED") ||
+                  starts_with(line.text, "MODEL RESULTS USE ");
+  // The upper-case end of a mixed-case paragraph:  `MODINDICES (ALL).`
+  if (!sentence && line.last_char == '.') return false;
   bool problem = reports_problem(line.text);
 
   // The rest of the paragraph: following upper-case lines with the same

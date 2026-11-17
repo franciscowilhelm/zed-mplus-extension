@@ -19,11 +19,15 @@
 ; THE MODEL ESTIMATION TERMINATED NORMALLY
 (notice) @emphasis.strong
 
+; Themes have no colours for messages, so warnings borrow the function colour
+; and errors the keyword colour. The extra `.warning` / `.error` lets a theme
+; or `theme_overrides` in the Zed settings style them on their own.
+
 ; *** WARNING in MODEL command ...,  NO CONVERGENCE ...,  WARNING:  THE ...
-(warning) @constant
+(warning) @function.warning
 
 ; *** ERROR in DATA command ...
-(error) @keyword
+(error) @keyword.error
 
 ; MUTHEN & MUTHEN
 (banner) @comment
