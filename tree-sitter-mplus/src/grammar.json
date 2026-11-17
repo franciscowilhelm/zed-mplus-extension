@@ -211,6 +211,19 @@
           "name": "is_are"
         },
         {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_hyphenated_setting"
+          },
+          "named": true,
+          "value": "identifier"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "percent_setting"
+        },
+        {
           "type": "STRING",
           "value": "="
         },
@@ -243,6 +256,20 @@
           "value": ")"
         }
       ]
+    },
+    "_hyphenated_setting": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PATTERN",
+        "value": "[kK]-1[sS][tT][aA][rR][tT][sS]|[cC][fF]-[vV][aA][rR][iI][mM][aA][xX]|[cC][fF]-[qQ][uU][aA][rR][tT][iI][mM][aA][xX]|[cC][fF]-[eE][qQ][uU][aA][mM][aA][xX]|[cC][fF]-[pP][aA][rR][sS][iI][mM][aA][xX]|[cC][fF]-[fF][aA][cC][pP][aA][rR][sS][iI][mM]|[bB][iI]-[gG][eE][oO][mM][iI][nN]|[bB][iI]-[cC][fF]-[qQ][uU][aA][rR][tT][iI][mM][aA][xX]"
+      }
+    },
+    "percent_setting": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PATTERN",
+        "value": "%[A-Za-z]+"
+      }
     },
     "statement": {
       "type": "SEQ",
@@ -447,6 +474,10 @@
           {
             "type": "STRING",
             "value": "&"
+          },
+          {
+            "type": "STRING",
+            "value": "^"
           },
           {
             "type": "STRING",

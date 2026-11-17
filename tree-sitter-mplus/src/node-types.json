@@ -205,6 +205,10 @@
           "named": true
         },
         {
+          "type": "percent_setting",
+          "named": true
+        },
+        {
           "type": "string",
           "named": true
         }
@@ -267,6 +271,10 @@
         },
         {
           "type": "path",
+          "named": true
+        },
+        {
+          "type": "percent_setting",
           "named": true
         },
         {
@@ -440,6 +448,10 @@
   },
   {
     "type": "path",
+    "named": true
+  },
+  {
+    "type": "percent_setting",
     "named": true
   },
   {

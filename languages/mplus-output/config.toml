@@ -1,0 +1,6 @@
+name = "Mplus Output"
+grammar = "mplus_out"
+path_suffixes = ["out"]
+first_line_pattern = '^Mplus VERSION'
+tab_size = 4
+hard_tabs = false

@@ -2,7 +2,7 @@
   {
     "label": "Mplus: run current file",
     "command": "mplus",
-    "args": ["$ZED_FILENAME"],
+    "args": ["$ZED_STEM.inp"],
     "cwd": "$ZED_DIRNAME",
     "save": "current",
     "use_new_terminal": false,
@@ -12,7 +12,7 @@
   },
   {
     "label": "Mplus: run current file and open output",
-    "command": "mplus \"$ZED_FILENAME\" && zed \"$ZED_STEM.out\"",
+    "command": "mplus \"$ZED_STEM.inp\" && zed \"$ZED_STEM.out\"",
     "cwd": "$ZED_DIRNAME",
     "save": "current",
     "use_new_terminal": false,

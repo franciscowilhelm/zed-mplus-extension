@@ -1,16 +1,23 @@
 id = "mplus"
 name = "Mplus"
-description = "Mplus (.inp) syntax highlighting, outline, and run tasks for Zed."
-version = "0.1.0"
+description = "Mplus input (.inp) and output (.out) syntax highlighting, outline, and run tasks for Zed."
+version = "0.2.0"
 schema_version = 1
 authors = ["Francisco Wilhelm <franciscowilhelm@gmail.com>"]
 repository = "https://github.com/franciscowilhelm/zed-mplus-extension"
 
-# The grammar lives in this repository under tree-sitter-mplus/.
+# The grammars live in this repository: tree-sitter-mplus/ (.inp) and
+# tree-sitter-mplus-out/ (.out).
 # Zed clones `repository` at `rev` and compiles <path>/src/parser.c (+ scanner.c).
-# `rev` must be a full commit SHA that contains the generated src/parser.c.
+# `rev` must be a full commit SHA that contains the generated src/parser.c of
+# that grammar; both entries normally point at the same commit.
 # For local grammar work use: repository = "file:///absolute/path/to/zed-mplus-extension"
 [grammars.mplus]
 repository = "https://github.com/franciscowilhelm/zed-mplus-extension"
 rev = "17addd93de02e021e775d14844ba95b39db31238"
 path = "tree-sitter-mplus"
+
+[grammars.mplus_out]
+repository = "https://github.com/franciscowilhelm/zed-mplus-extension"
+rev = "17addd93de02e021e775d14844ba95b39db31238"
+path = "tree-sitter-mplus-out"

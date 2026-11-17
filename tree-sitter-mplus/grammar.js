@@ -124,6 +124,8 @@ module.exports = grammar({
         $.option_group,
         $.operator,
         $.is_are,
+        alias($._hyphenated_setting, $.identifier),
+        $.percent_setting,
         '=',
         ',',
         '.',
@@ -131,6 +133,30 @@ module.exports = grammar({
 
     // GROUPING = g (1 = male 2 = female);  CLASSES = c(3);  MISSING = ALL(-99);
     option_group: ($) => seq('(', repeat($._option_value), ')'),
+
+    // Option names and settings that contain a hyphen; without this they
+    // would lex as `K`, `-`, `1`, `STARTS`.
+    //   K-1STARTS = 20 4;   ROTATION = CF-VARIMAX (ORTHOGONAL);
+    _hyphenated_setting: (_) =>
+      token(
+        new RegExp(
+          [
+            'K-1STARTS',
+            'CF-VARIMAX',
+            'CF-QUARTIMAX',
+            'CF-EQUAMAX',
+            'CF-PARSIMAX',
+            'CF-FACPARSIM',
+            'BI-GEOMIN',
+            'BI-CF-QUARTIMAX',
+          ]
+            .map(ci)
+            .join('|'),
+        ),
+      ),
+
+    // CROSSTABS (%ROW);  CROSSTABS (%COLUMN);  CROSSTABS (%TOTAL);
+    percent_setting: (_) => token(/%[A-Za-z]+/),
 
     // Model and expression statements are flat item sequences ending in `;`.
     // f1 BY y1-y5* (l1-l5);   [y1$1@0];   s | y ON x;   NEW(ab); ab = a*b;
@@ -174,7 +200,7 @@ module.exports = grammar({
     operator: (_) =>
       token(
         choice(
-          '**', '*', '/', '+', '-', '@', '$', '#', '|', '~', '&',
+          '**', '*', '/', '+', '-', '@', '$', '#', '|', '~', '&', '^',
           '==', '/=', '<=', '>=', '<', '>', '<>',
         ),
       ),

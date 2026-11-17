@@ -4,13 +4,14 @@
 extension.wasm
 
 # tree-sitter
-tree-sitter-mplus/node_modules/
-tree-sitter-mplus/build/
-tree-sitter-mplus/*.dylib
-tree-sitter-mplus/*.so
-tree-sitter-mplus/*.dll
+tree-sitter-mplus*/node_modules/
+tree-sitter-mplus*/build/
+tree-sitter-mplus*/*.dylib
+tree-sitter-mplus*/*.so
+tree-sitter-mplus*/*.dll
 
 # Mplus run artifacts from the examples
 *.out
+!tree-sitter-mplus-out/examples/*.out
 *.gh5
 .DS_Store

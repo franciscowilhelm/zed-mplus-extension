@@ -1,0 +1,225 @@
+[
+  {
+    "type": "banner_section",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "banner",
+          "named": true
+        },
+        {
+          "type": "error",
+          "named": true
+        },
+        {
+          "type": "notice",
+          "named": true
+        },
+        {
+          "type": "number",
+          "named": true
+        },
+        {
+          "type": "parameter_header",
+          "named": true
+        },
+        {
+          "type": "subheading",
+          "named": true
+        },
+        {
+          "type": "warning",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "input_section",
+    "named": true,
+    "fields": {
+      "heading": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "input_heading",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "error",
+          "named": true
+        },
+        {
+          "type": "input_text",
+          "named": true
+        },
+        {
+          "type": "notice",
+          "named": true
+        },
+        {
+          "type": "number",
+          "named": true
+        },
+        {
+          "type": "parameter_header",
+          "named": true
+        },
+        {
+          "type": "subheading",
+          "named": true
+        },
+        {
+          "type": "warning",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "section",
+    "named": true,
+    "fields": {
+      "heading": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "heading",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "error",
+          "named": true
+        },
+        {
+          "type": "notice",
+          "named": true
+        },
+        {
+          "type": "number",
+          "named": true
+        },
+        {
+          "type": "parameter_header",
+          "named": true
+        },
+        {
+          "type": "subheading",
+          "named": true
+        },
+        {
+          "type": "warning",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "source_file",
+    "named": true,
+    "root": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "banner_section",
+          "named": true
+        },
+        {
+          "type": "error",
+          "named": true
+        },
+        {
+          "type": "input_section",
+          "named": true
+        },
+        {
+          "type": "notice",
+          "named": true
+        },
+        {
+          "type": "number",
+          "named": true
+        },
+        {
+          "type": "parameter_header",
+          "named": true
+        },
+        {
+          "type": "section",
+          "named": true
+        },
+        {
+          "type": "subheading",
+          "named": true
+        },
+        {
+          "type": "warning",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "banner",
+    "named": true
+  },
+  {
+    "type": "error",
+    "named": true
+  },
+  {
+    "type": "heading",
+    "named": true
+  },
+  {
+    "type": "input_heading",
+    "named": true
+  },
+  {
+    "type": "input_text",
+    "named": true
+  },
+  {
+    "type": "notice",
+    "named": true
+  },
+  {
+    "type": "number",
+    "named": true
+  },
+  {
+    "type": "parameter_header",
+    "named": true
+  },
+  {
+    "type": "subheading",
+    "named": true
+  },
+  {
+    "type": "warning",
+    "named": true
+  }
+]

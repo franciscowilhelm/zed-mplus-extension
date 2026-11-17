@@ -1,0 +1,30 @@
+Mplus VERSION 8.10 (Mac)
+MUTHEN & MUTHEN
+11/17/2026   5:07 PM
+
+INPUT INSTRUCTIONS
+
+  TITLE: error
+  DATA: FILE = cfa.dat;
+  VARIABLE: NAMES = y1-y6; USEVARIABLES = y1-y3 q;
+  MODEL: f1 BY y1-y3 y9;
+    this is a very long line that exceeds the ninety character limit of mplus input lines fo
+
+*** WARNING
+  Input line exceeded 90 characters. Some input may be truncated.
+    this is a very long line that exceeds the ninety character limit of mplus input lines for
+*** ERROR in DEFINE command
+  A new variable included on the USEVARIABLES list was not defined.
+  Check your DEFINE statements.  Undefined variable:  Q
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2023 Muthen & Muthen

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
+  "grammars": [
+    {
+      "name": "mplus_out",
+      "camelcase": "MplusOut",
+      "title": "Mplus Output",
+      "scope": "text.mplus.output",
+      "path": ".",
+      "file-types": ["out"],
+      "first-line-regex": "^Mplus VERSION",
+      "highlights": "queries/highlights.scm",
+      "injections": "queries/injections.scm"
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "license": "MIT",
+    "description": "Tree-sitter grammar for Mplus output (.out) files",
+    "links": {
+      "repository": "https://github.com/franciscowilhelm/zed-mplus-extension"
+    }
+  }
+}

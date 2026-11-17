@@ -1,0 +1,25 @@
+{
+  "name": "tree-sitter-mplus-out",
+  "version": "0.1.0",
+  "description": "Tree-sitter grammar for Mplus output (.out) files",
+  "license": "MIT",
+  "private": true,
+  "keywords": [
+    "tree-sitter",
+    "mplus",
+    "sem",
+    "parser"
+  ],
+  "devDependencies": {
+    "tree-sitter-cli": "^0.25.0"
+  },
+  "scripts": {
+    "generate": "tree-sitter generate",
+    "parse": "tree-sitter parse examples/*.out --quiet --stat",
+    "highlight": "tree-sitter highlight examples/*.out",
+    "test": "tree-sitter generate && tree-sitter parse examples/*.out --quiet --stat"
+  },
+  "allowScripts": {
+    "tree-sitter-cli@0.25.10": true
+  }
+}

@@ -1,0 +1,153 @@
+TITLE: Options and settings from the language summary (User's Guide, chapter 20)
+    that the syntax tour does not cover. Not a runnable model.
+
+DATA:
+    FILE IS data.dat;
+    FORMAT IS 5F4.0, 10X, 6F1.0;
+    TYPE IS COVARIANCE MEANS STDEVIATIONS;
+    NOBSERVATIONS ARE 500;
+    NGROUPS = 2;
+    SWMATRIX = sw.dat;
+    VARIANCES = NOCHECK;
+
+DATA WIDETOLONG:
+    WIDE = y11-y14 | y21-y24;
+    LONG = y1 | y2;
+    IDVARIABLE = person;
+    REPETITION = time;
+
+DATA TWOPART:
+    NAMES = smoke1-smoke4;
+    CUTPOINT = 0;
+    BINARY = bin1-bin4;
+    CONTINUOUS = cont1-cont4;
+    TRANSFORM = LOG;
+
+DATA MISSING:
+    NAMES = y1-y4;
+    BINARY = d1-d4;
+    TYPE = SDROPOUT;
+    DESCRIPTIVE = y1-y4 | x1-x2;
+
+DATA COHORT:
+    COHORT IS birth (63 64 65);
+    COHRECODE = (1=2 3=4);
+    TIMEMEASURES = y1 (64) y2 (65) | z1 (64) z2 (65);
+    TNAMES = y | z;
+
+VARIABLE:
+    NAMES ARE id y1-y6 x1-x3 u1-u4 t1-t4 w sw clus strat time;
+    MISSING ARE .;
+    MISSING = *;
+    MISSING = BLANK;
+    MISSING ARE y1-y6 (-9 -99) x1 (9);
+    CENSORED ARE y1 (a) y2 (bi);
+    NOMINAL = u1;
+    COUNT = u2 (zi) u3 (nb);
+    IDVARIABLE = _RECNUM;
+    TSCORES = t1-t4;
+    AUXILIARY = (M) x2 x3;
+    PATTERN IS p (1 = y1 y2 2 = y3 y4);
+    STRATIFICATION IS strat;
+    WEIGHT = sw;
+    WTSCALE = ECLUSTER;
+    BWTSCALE = SAMPLE;
+    SUBPOPULATION IS x1 EQ 1 OR x2 GE 3;
+    FINITE = fin (SFRACTION);
+    KNOWNCLASS = cg (g = 1 g = 2);
+    TRAINING = t1-t4 (PROBABILITIES);
+    SURVIVAL = t (4*5 10);
+    TIMECENSORED = tc (0 = NOT 1 = RIGHT);
+    LAGGED = y1 (1) y2 (2);
+    TINTERVAL = time (1);
+
+DEFINE:
+    STANDARDIZE y1-y3;
+    CUT y4 (30 40);
+    ymean = CLUSTER_MEAN (y1);
+    CENTER x1 x2 (GROUPMEAN clus);
+    IF (y1 EQ _MISSING) THEN y2 = _MISSING;
+    DO ($, 1, 2) DO (#, 1, 3) z$# = y# * $;
+
+ANALYSIS:
+    TYPE = TWOLEVEL EFA 1 3 UW* 1 2 UB*;
+    DISTRIBUTION = SKEWT;
+    PARAMETERIZATION = RESCOVARIANCES;
+    ROTATION = CF-VARIMAX (ORTHOGONAL);
+    ROTATION = BI-GEOMIN (OBLIQUE);
+    ROTATION = GEOMIN (OBLIQUE .5);
+    ROWSTANDARDIZATION = KAISER;
+    REPSE = FAY (.3);
+    BASEHAZARD = OFF (UNEQUAL);
+    INTEGRATION = MONTECARLO (500);
+    BOOTSTRAP = 1000 (RESIDUAL);
+    ALIGNMENT = FREE (2 BSEM);
+    SIMPLICITY = FOURTHRT;
+    METRIC = PRODUCT;
+    MIXC = CONVERGENCE;
+    LOGHIGH = +15;
+    LOGLOW = -15;
+    ALGORITHM = GIBBS (RW);
+    STVALUES = PERTURBED;
+    POINT = MODE;
+
+MODEL:
+    %WITHIN%
+    s | y1 ON y1&1;
+    y2 ON y2&1 x1;
+    y1^ ON y1^1;
+    i s | y1-y4 AT t1-t4;
+    f2 f3 PON f1 f2;
+    f1 f2 PWITH f4 f5;
+    %BETWEEN clus%
+    y1 WITH y2;
+
+MODEL POPULATION-g1:
+    f BY y1-y4*.8;
+
+MODEL COVERAGE:
+    f BY y1-y4*.8;
+
+MODEL MISSING:
+    [y1-y4@-1];
+    y2 ON x1*.4;
+
+MODEL INDIRECT:
+    y MOD m z (-1 1 0.5) x;
+
+MODEL PRIORS:
+    COVARIANCE(a, b) ~ IW(0, 3);
+    DIFFERENCE(l1-l3) ~ N(0, 0.01);
+
+OUTPUT:
+    CROSSTABS (%ROW) CROSSTABS (%COLUMN);
+    STDYX (CLUSTER) RESIDUAL (CLUSTER);
+    CINTERVAL (HPD);
+    H1MODEL (SEQUENTIAL) FSCOMPARISON TECH4 (CLUSTER) TECH16;
+
+SAVEDATA:
+    FORMAT IS F10.3;
+    MISSFLAG = *;
+    RECORDLENGTH IS 2000;
+    BPARAMETERS = draws.dat;
+    SAVE = FSCORES (50 10) LRESPONSES (20) PROPENSITY BCHWEIGHTS;
+    MMISSING = y1 (9);
+
+PLOT:
+    TYPE IS PLOT2 SENSITIVITY;
+    OUTLIERS ARE MAHALANOBIS COOKS;
+    MONITOR = ON;
+
+MONTECARLO:
+    NAMES = y1-y4 x1;
+    NOBSERVATIONS = 500;
+    NREPS = 100;
+    GENERATE = y1-y4 (1);
+    CUTPOINTS = x1 (0);
+    GENCLASSES = c (2);
+    NCSIZES = 3 | 2;
+    CSIZES = 40 (5) 50 (10) 20 (15) | 30 (10) 20 (5);
+    PATMISS = y1 (.1) y2 (.2) | y1 (.3);
+    PATPROBS = .4 | .6;
+    REPSAVE = ALL;
+    SAVE = rep*.dat;

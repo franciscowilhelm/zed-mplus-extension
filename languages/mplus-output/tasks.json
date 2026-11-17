@@ -1,0 +1,18 @@
+[
+  {
+    "label": "Mplus: open input of current output",
+    "command": "zed",
+    "args": ["$ZED_DIRNAME/$ZED_STEM.inp"],
+    "reveal": "never",
+    "hide": "on_success"
+  },
+  {
+    "label": "Mplus: re-run input of current output",
+    "command": "mplus",
+    "args": ["$ZED_STEM.inp"],
+    "cwd": "$ZED_DIRNAME",
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false,
+    "reveal": "always"
+  }
+]
