@@ -14,10 +14,10 @@ repository = "https://github.com/franciscowilhelm/zed-mplus-extension"
 # For local grammar work use: repository = "file:///absolute/path/to/zed-mplus-extension"
 [grammars.mplus]
 repository = "https://github.com/franciscowilhelm/zed-mplus-extension"
-rev = "17addd93de02e021e775d14844ba95b39db31238"
+rev = "04ba66ac9f65b09ce2d0bf376e9dff92ef0339c9"
 path = "tree-sitter-mplus"
 
 [grammars.mplus_out]
 repository = "https://github.com/franciscowilhelm/zed-mplus-extension"
-rev = "17addd93de02e021e775d14844ba95b39db31238"
+rev = "04ba66ac9f65b09ce2d0bf376e9dff92ef0339c9"
 path = "tree-sitter-mplus-out"
