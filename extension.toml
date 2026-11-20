@@ -19,5 +19,5 @@ path = "tree-sitter-mplus"
 
 [grammars.mplus_out]
 repository = "https://github.com/franciscowilhelm/zed-mplus-extension"
-rev = "0c0b4330bdb7688b58f087b642c64c2d2a3f7b31"
+rev = "fa40a3046c6a8313256144314556d54f667f3394"
 path = "tree-sitter-mplus-out"
