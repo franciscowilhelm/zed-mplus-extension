@@ -343,6 +343,21 @@ bool tree_sitter_mplus_out_external_scanner_scan(void *payload, TSLexer *lexer,
       }
     }
     if (!title) return false;
+    // A title at column 0 may wrap onto the next line(s):
+    //   Chi-Square Test of Model Fit for the Binary and Ordered Categorical
+    //   (Ordinal) Outcomes
+    if (indent == 0) {
+      unsigned next_indent = 0;
+      while (next_line(lexer, &next_indent) && next_indent == 0) {
+        Line rest;
+        read_line(lexer, &rest, false);
+        if (!rest.has_lower || rest.has_gap || rest.has_colon || rest.last_char == '.' ||
+            starts_with(rest.text, "***")) {
+          break;
+        }
+        lexer->mark_end(lexer);
+      }
+    }
     lexer->result_symbol = SUBHEADING;
     return valid_symbols[SUBHEADING];
   }
