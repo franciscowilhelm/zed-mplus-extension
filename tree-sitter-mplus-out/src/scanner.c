@@ -319,10 +319,13 @@ bool tree_sitter_mplus_out_external_scanner_scan(void *payload, TSLexer *lexer,
   bool is_banner = indent == 0 && equals(line.text, "MUTHEN & MUTHEN");
   bool is_fit_index = indent == 0 && equals(line.text, "CFI/TLI");
   // A status line, as opposed to a heading.
+  //   PROBLEM OCCURRED IN EXPLORATORY FACTOR ANALYSIS WITH 3 FACTOR(S).
   bool sentence = line.has_sentence || contains(line.text, "TERMINATED") ||
-                  starts_with(line.text, "MODEL RESULTS USE ");
+                  starts_with(line.text, "MODEL RESULTS USE ") || contains(line.text, "(S).");
   // The upper-case end of a mixed-case paragraph:  `MODINDICES (ALL).`
   if (!sentence && line.last_char == '.') return false;
+  // A reported value, not a title:  `... (H1) MODEL IS -2974.677`
+  if (!sentence && is_digit(line.last_char) && contains(line.text, " IS ")) return false;
   bool problem = reports_problem(line.text);
 
   // The rest of the paragraph: following upper-case lines with the same
@@ -333,7 +336,10 @@ bool tree_sitter_mplus_out_external_scanner_scan(void *payload, TSLexer *lexer,
     while (next_line(lexer, &next_indent) && next_indent == indent) {
       Line rest;
       read_line(lexer, &rest, false);
-      if (rest.has_lower || rest.has_gap || starts_with(rest.text, "***")) break;
+      // A gap means a table row, unless the line ends a sentence:
+      //   THE CONDITION NUMBER IS      -0.152D-02.
+      bool table_row = rest.has_gap && rest.last_char != '.';
+      if (rest.has_lower || table_row || starts_with(rest.text, "***")) break;
       lexer->mark_end(lexer);
       sentence = sentence || rest.has_sentence || contains(rest.text, "TERMINATED");
       problem = problem || reports_problem(rest.text);

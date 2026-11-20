@@ -15,3 +15,6 @@ tree-sitter-mplus*/*.dll
 !tree-sitter-mplus-out/examples/*.out
 *.gh5
 .DS_Store
+
+# folder for other non git documents
+/nongit/
