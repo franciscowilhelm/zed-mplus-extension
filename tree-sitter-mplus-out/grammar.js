@@ -63,10 +63,10 @@ module.exports = grammar({
         $._word,
       ),
 
-    // 0.969   -694.334   0.500D-04   0.483E+00   0.20%   500
+    // 0.969   -694.334   0.500D-04   0.483E+00   0.20%   500   1.000* (significant)
     // Listed before `_word` so that it wins when both match the same text;
     // a longer word (a date, a time, `Y1`) still wins by length.
-    number: (_) => token(/[-+]?(\d+\.?\d*|\.\d+)([DdEe][-+]?\d+)?%?/),
+    number: (_) => token(/[-+]?(\d+\.?\d*|\.\d+)([DdEe][-+]?\d+)?[%*]?/),
 
     _word: (_) => /[^\s]+/,
   },

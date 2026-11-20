@@ -10,6 +10,8 @@
  *                               banner           MUTHEN & MUTHEN
  *   column 0, mixed case        subheading       Chi-Square Test of Model Fit
  *   indented, upper case        subheading       PARAMETER SPECIFICATION
+ *   indented, after a blank     subheading       THETA / Pearson Chi-Square /
+ *     line (see below)                           GEOMIN ROTATED LOADINGS (* significant ...)
  *   column 1, no numbers        parameter_header  F1       BY / Residual Variances
  *   `*** ERROR ...`             error            with the indented text below it
  *   `*** WARNING ...`           warning          ditto
@@ -50,6 +52,7 @@ typedef struct {
   unsigned len;
   unsigned words;
   unsigned numeric_words;  // words after the first that start like a number
+  unsigned caps_words;     // words with two or more upper-case letters in a row
   char last_word[8];
   char last_char;
   bool has_lower;
@@ -99,6 +102,7 @@ static void read_line(TSLexer *lexer, Line *line, bool mark) {
   line->len = 0;
   line->words = 0;
   line->numeric_words = 0;
+  line->caps_words = 0;
   line->last_word[0] = '\0';
   line->last_char = '\0';
   line->has_lower = false;
@@ -159,6 +163,7 @@ static void read_line(TSLexer *lexer, Line *line, bool mark) {
         caps = 0;
       } else if (++caps >= 2) {
         line->has_caps_word = true;
+        if (caps == 2) line->caps_words++;
       }
     } else {
       letters = 0;
@@ -218,6 +223,22 @@ static bool is_model_keyword(const char *word) {
   return false;
 }
 
+/* TECH1 matrix names, alone on a line:  NU, LAMBDA, THETA, ALPHA(C), GAMMA(C) */
+static bool is_matrix_name(const char *text) {
+  static const char *const NAMES[] = {"NU",   "LAMBDA", "THETA", "ALPHA", "BETA",
+                                      "PSI",  "TAU",    "GAMMA", "DELTA", "KAPPA"};
+  for (unsigned i = 0; i < sizeof(NAMES) / sizeof(NAMES[0]); i++) {
+    const char *t = text;
+    const char *n = NAMES[i];
+    while (*n && *t == *n) {
+      t++;
+      n++;
+    }
+    if (*n == '\0' && (*t == '\0' || *t == '(')) return true;
+  }
+  return false;
+}
+
 void *tree_sitter_mplus_out_external_scanner_create(void) { return NULL; }
 
 void tree_sitter_mplus_out_external_scanner_destroy(void *payload) { (void)payload; }
@@ -263,10 +284,12 @@ bool tree_sitter_mplus_out_external_scanner_scan(void *payload, TSLexer *lexer,
 
   // Only the first token of a line is of interest.
   bool line_start = lexer->get_column(lexer) == 0;
+  unsigned newlines = 0;
   while (!lexer->eof(lexer)) {
     int32_t c = lexer->lookahead;
     if (c == '\n') {
       line_start = true;
+      newlines++;
     } else if (!is_blank(c)) {
       break;
     }
@@ -300,14 +323,34 @@ bool tree_sitter_mplus_out_external_scanner_scan(void *payload, TSLexer *lexer,
     return valid_symbols[PARAMETER_HEADER];
   }
 
+  // A title opens a block: it follows a blank line, has no columns and does
+  // not read as a sentence or a `name: value` line.
+  bool after_blank = newlines >= 2;
+  bool title_like = is_upper(first) && !line.has_gap && !line.has_colon &&
+                    line.last_char != '.' && line.last_char != ',';
+
   // Mixed-case titles at column 0:  `Information Criteria`, `Latent Class 1`
   if (line.has_lower) {
-    if (indent == 0 && is_upper(first) && !line.has_gap && !line.has_colon &&
-        line.last_char != '.' && line.last_char != ',') {
-      lexer->result_symbol = SUBHEADING;
-      return valid_symbols[SUBHEADING];
+    if (!title_like) return false;
+    bool title = indent == 0;
+    if (!title && after_blank) {
+      // Indented, mostly upper case:  `GEOMIN ROTATED LOADINGS (* significant at 5% level)`
+      title = line.caps_words >= 2;
+      // Indented and alone between blank lines:  `Pearson Chi-Square`, `Akaike (AIC)`
+      if (!title && line.words >= 2) {
+        unsigned next_indent = 0;
+        title = !next_line(lexer, &next_indent);
+      }
     }
-    return false;
+    if (!title) return false;
+    lexer->result_symbol = SUBHEADING;
+    return valid_symbols[SUBHEADING];
+  }
+
+  // TECH1 matrix names:  `THETA`, `ALPHA(C)`
+  if (indent > 0 && after_blank && line.words == 1 && is_matrix_name(line.text)) {
+    lexer->result_symbol = SUBHEADING;
+    return valid_symbols[SUBHEADING];
   }
 
   // From here on: lines without lower-case letters.

@@ -234,8 +234,9 @@ static bool ts_lex(TSLexer *lexer, TSStateId state) {
       END_STATE();
     case 2:
       ACCEPT_TOKEN(sym_number);
-      if (lookahead == '%') ADVANCE(5);
       if (lookahead == '.') ADVANCE(3);
+      if (lookahead == '%' ||
+          lookahead == '*') ADVANCE(5);
       if (lookahead == 'D' ||
           lookahead == 'E' ||
           lookahead == 'd' ||
@@ -247,7 +248,8 @@ static bool ts_lex(TSLexer *lexer, TSStateId state) {
       END_STATE();
     case 3:
       ACCEPT_TOKEN(sym_number);
-      if (lookahead == '%') ADVANCE(5);
+      if (lookahead == '%' ||
+          lookahead == '*') ADVANCE(5);
       if (lookahead == 'D' ||
           lookahead == 'E' ||
           lookahead == 'd' ||
@@ -259,7 +261,8 @@ static bool ts_lex(TSLexer *lexer, TSStateId state) {
       END_STATE();
     case 4:
       ACCEPT_TOKEN(sym_number);
-      if (lookahead == '%') ADVANCE(5);
+      if (lookahead == '%' ||
+          lookahead == '*') ADVANCE(5);
       if (('0' <= lookahead && lookahead <= '9')) ADVANCE(4);
       if (lookahead != 0 &&
           (lookahead < '\t' || '\r' < lookahead) &&
